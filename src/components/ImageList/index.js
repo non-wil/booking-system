@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './style.scss'
 
-function ImageList() {
+const ImageList = () => {
   const [imgList, setImgList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -23,7 +23,7 @@ function ImageList() {
         console.log('Cannot fetch image list: ', error)
       })
   }
-
+  console.log(imgList)
   if (isLoading) return <div>Loading</div>
   return (
     <div className="container">
@@ -31,7 +31,7 @@ function ImageList() {
         {imgList.map(img => {
           return (
             <div key={img.id} className="img-item">
-              <img src={img.download_url} />
+              <img src={img.download_url} alt={`img-${img.id}`} />
             </div>
           )
         })}
