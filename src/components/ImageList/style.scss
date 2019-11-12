@@ -1,0 +1,16 @@
+.container {
+  display: block;
+  margin: 0 4%;
+  overflow: hidden;
+  .img-list {
+    margin: 0 -15%;
+    .img-item {
+      display: inline-block;
+      margin: 2px;
+      img {
+        height: 150px;
+        width: auto;
+      }
+    }
+  }
+}
