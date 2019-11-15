@@ -2,6 +2,19 @@ import React from 'react'
 import moment from 'moment'
 import { BOOKINGS } from './bookingData'
 
+/* NOTE: 
+        @d1 |--------| @d2       
+            .        . |--------| @d2 < start_date  **Available
+            .        |--------|   @d2 = start_date  **Available
+ |--------| .        .            end_date < @d1    **Available
+   |--------|        .            end_date = @d1    **Available
+     |--------|      .                              **NOT Available
+            .      |--------|                       **NOT Available
+            |--------|                              **NOT Available
+            . |----| .                              **NOT Available
+            |------------|                          **NOT Available
+*/
+
 const Booking = () => {
   const getOverlapSchedule = (roomId, startTime, endTime) => {
     const roomSchedules = BOOKINGS.filter(booking => {
@@ -21,18 +34,6 @@ const Booking = () => {
 
     return overlapSchedules
   }
-
-  console.log(`
-        @d1 |--------| @d2       
-            .        . |--------| @d2 < start_date  **Available
-            .        |--------|   @d2 = start_date  **Available
- |--------| .        .            end_date < @d1    **Available
-   |--------|        .            end_date = @d1    **Available
-     |--------|      .                              **NOT Available
-            .      |--------|                       **NOT Available
-            |--------|                              **NOT Available
-            . |----| .                              **NOT Available
-            |------------|                          **NOT Available`)
 
   const checkAvailability = (roomId, startTime, endTime) => {
     const overlapSchedules = getOverlapSchedule(roomId, startTime, endTime)
@@ -58,7 +59,7 @@ const Booking = () => {
   )
 
   const weeknumber = moment('2019-09-28 00:00:00').isoWeek()
-  console.log('getBookingsForWeek', getBookingsForWeek('A102', 40))
+  console.log('getBookingsForWeek', getBookingsForWeek('A101', weeknumber))
   return (
     <div>
       <h1>Booking System</h1>
