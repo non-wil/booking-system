@@ -1,6 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 import { BOOKINGS } from './bookingData'
+import './style.scss'
 
 /* NOTE: 
         @d1 |--------| @d2       
@@ -14,6 +15,7 @@ import { BOOKINGS } from './bookingData'
             . |----| .                              **NOT Available
             |------------|                          **NOT Available
 */
+const DOT_COLOR = ['#3DC7D2', '#23CF5F', 'F3814A']
 
 const Booking = () => {
   const getOverlapSchedule = (roomId, startTime, endTime) => {
@@ -60,10 +62,73 @@ const Booking = () => {
 
   const weeknumber = moment('2019-09-28 00:00:00').isoWeek()
   console.log('getBookingsForWeek', getBookingsForWeek('A101', weeknumber))
+
   return (
-    <div>
-      <h1>Booking System</h1>
-      <div></div>
+    <div style={{ background: '#bbc2d1' }}>
+      <div className="container">
+        <div className="left-box">
+          <div className="room-no-box">
+            <span>A101</span>
+          </div>
+          <div className="date-box">
+            <small>Upcoming</small>
+            <h1>
+              <span>Monday</span> <br /> 28 Sep
+            </h1>
+          </div>
+          <div className="today-schedule">
+            <div className="schedule-item">
+              <small>13.00 - 14.00</small>
+              <p>Lunch with petr</p>
+            </div>
+            <div className="schedule-item">
+              <small>13.00 - 14.00</small>
+              <p>Lunch with petr</p>
+            </div>
+            <div className="schedule-item">
+              <small>13.00 - 14.00</small>
+              <p>Lunch with petr</p>
+            </div>
+          </div>
+        </div>
+        <div className="right-box">
+          <div className="tab-header">
+            <div className="tab-title tab-active">
+              <span>THIS WEEK</span>
+            </div>
+            <div className="tab-title">
+              <span>NEXT WEEK</span>
+            </div>
+            <div className="tab-title">
+              <span>WHOLE WEEK</span>
+            </div>
+          </div>
+          <div className="tab-body">
+            <small className="date-title">Today (Mon, 28 Sep)</small>
+            <div className="schedule-detail">
+              <div className="time">
+                <div className="dot" style={{ background: DOT_COLOR[0] }}></div>
+                <small>13:00 - 14:00</small>
+              </div>
+              <p>Lunch with petr</p>
+            </div>
+            <div className="schedule-detail">
+              <div className="time">
+                <div className="dot" style={{ background: DOT_COLOR[1] }}></div>
+                <small>13:00 - 14:00</small>
+              </div>
+              <p>Lunch with petr</p>
+            </div>
+            <div className="schedule-detail">
+              <div className="time">
+                <div className="dot" style={{ background: DOT_COLOR[2] }}></div>
+                <small>13:00 - 14:00</small>
+              </div>
+              <p>Lunch with petr</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

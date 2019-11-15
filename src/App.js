@@ -6,7 +6,7 @@ import './App.css'
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <Router>
         <nav className="nav">
           <ul>
@@ -17,7 +17,7 @@ function App() {
               <Link to="/img-list">Image List</Link>
             </li>
             <li>
-              <Link to="/booking">Booking</Link>
+              <Link to="/bookings/today?roomId=A101">Booking</Link>
             </li>
           </ul>
         </nav>
@@ -25,7 +25,7 @@ function App() {
           <Route path="/img-list">
             <ImageList />
           </Route>
-          <Route path="/booking">
+          <Route path="/bookings/today">
             <Booking />
           </Route>
         </Switch>
