@@ -23,7 +23,7 @@ const ImageList = () => {
         console.log('Cannot fetch image list: ', error)
       })
   }
-  console.log(imgList)
+
   if (isLoading) return <div>Loading...</div>
   return (
     <div className="container">

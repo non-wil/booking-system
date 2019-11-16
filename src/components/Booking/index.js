@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import moment from 'moment'
 import queryString from 'query-string'
 import { BOOKINGS } from './bookingData'
@@ -38,6 +38,9 @@ const Booking = () => {
     return overlapSchedules
   }
 
+  // ---------------------------------------------------
+  // NOTE: 02 - Venue Booking System (checkAvailability)
+  // ---------------------------------------------------
   const checkAvailability = (roomId, startTime, endTime) => {
     const overlapSchedules = getOverlapSchedule(roomId, startTime, endTime)
     return overlapSchedules.length > 0 ? false : true
@@ -46,23 +49,29 @@ const Booking = () => {
     'checkAvailability',
     checkAvailability('A101', '2019-10-06 14:00:00', '2019-10-06 15:00:00')
   )
+  // -------------------------------------------------
 
+  // ----------------------------------------------------
+  // NOTE: 02 - Venue Booking System (getBookingsForWeek)
+  // ----------------------------------------------------
   const getBookingsForWeek = (roomId, weekNo) => {
-    const startDate = moment()
+    const _startTime = moment()
       .day('Monday')
       .week(weekNo)
       .format('YYYY-MM-DD 00:00:00')
-    const endDate = moment(startDate)
+    const _endTime = moment(_startTime)
       .add(6, 'days')
       .format('YYYY-MM-DD 23:59:59')
 
-    const bookingForWeek = getOverlapSchedule(roomId, startDate, endDate)
-    return bookingForWeek
+    const bookingForWeek = getOverlapSchedule(roomId, _startTime, _endTime)
+    const sortedbookingForWeek = bookingForWeek.sort((a, b) => {
+      return moment(a.startTime) - moment(b.startTime)
+    })
+    return sortedbookingForWeek
   }
-  const weeknumber = moment('2019-09-28 00:00:00').isoWeek()
-  console.log('getBookingsForWeek', getBookingsForWeek('A101', weeknumber))
+  // ----------------------------------------------------
 
-  const getBookingsForADay = (roomId, date) => {
+  const getBookingsForDay = (roomId, date) => {
     const _startTime = moment(date).format('YYYY-MM-DD 00:00:00')
     const _endTime = moment(date).format('YYYY-MM-DD 23:59:59')
 
@@ -73,10 +82,114 @@ const Booking = () => {
     return sortedSchedule
   }
 
+  const getBookingsForMonth = (roomId, date) => {
+    const days = moment(date, 'YYYY-MM').daysInMonth()
+
+    const _startTime = moment(date)
+      .set('date', 1)
+      .format('YYYY-MM-DD 00:00:00')
+    const _endTime = moment(date)
+      .set('date', days)
+      .format('YYYY-MM-DD 00:00:00')
+
+    const overlapSchedules = getOverlapSchedule(roomId, _startTime, _endTime)
+    const sortedSchedule = overlapSchedules.sort((a, b) => {
+      return moment(a.startTime) - moment(b.startTime)
+    })
+
+    return sortedSchedule
+  }
+
   const query = queryString.parse(window.location.search)
   const roomId = query.roomId
   const todayDate = moment('2019-09-28 00:00:00')
-  const todaySchedules = getBookingsForADay(roomId, todayDate)
+  const weekNumber = moment('2019-09-28 00:00:00').isoWeek()
+  const todaySchedules = getBookingsForDay(roomId, todayDate)
+
+  const [activeTab, setActivetab] = useState(0)
+  const [schedules, setSchedules] = useState([])
+
+  const onChangeTab = tabIndex => {
+    setActivetab(tabIndex)
+
+    switch (tabIndex) {
+      case 1: {
+        // NEXT WEEK
+        const schedules = getBookingsForWeek(roomId, weekNumber + 1)
+        setSchedules(schedules)
+        break
+      }
+      case 2: {
+        const schedules = getBookingsForMonth(roomId, todayDate)
+        setSchedules(schedules)
+        break
+      }
+      case 0: // THIS WEEK
+      default: {
+        const schedules = getBookingsForWeek(roomId, weekNumber)
+        setSchedules(schedules)
+        break
+      }
+    }
+  }
+
+  const getTextTodayTomorrow = (today, checkedDate) => {
+    if (moment(today).isSame(moment(checkedDate), 'day')) return 'Today'
+    if (
+      moment(today)
+        .add(1, 'day')
+        .isSame(moment(checkedDate), 'day')
+    )
+      return 'Tomorrow'
+    return ''
+  }
+
+  const renderSchedule = () => {
+    if (schedules[0]) {
+      let currentDay
+      return schedules.map((schedule, index) => {
+        if (moment(schedule.startTime).isSame(currentDay, 'day')) {
+          return (
+            <div key={index} className="schedule-detail">
+              <div className="time">
+                <div
+                  className="dot"
+                  style={{ background: DOT_COLOR[index % 3] }}
+                ></div>
+                <small>{`${moment(schedule.startTime).format(
+                  'HH:mm'
+                )} - ${moment(schedule.endTime).format('HH:mm')}`}</small>
+              </div>
+              <p>{schedule.title}</p>
+            </div>
+          )
+        } else {
+          currentDay = moment(schedule.startTime)
+          return (
+            <div key={index}>
+              <small className="date-title">
+                {`${getTextTodayTomorrow(todayDate, currentDay)} ${moment(
+                  schedule.startTime
+                ).format('ddd, DD MMM')}`}
+              </small>
+              <div className="schedule-detail">
+                <div className="time">
+                  <div
+                    className="dot"
+                    style={{ background: DOT_COLOR[index % 3] }}
+                  ></div>
+                  <small>{`${moment(schedule.startTime).format(
+                    'HH:mm'
+                  )} - ${moment(schedule.endTime).format('HH:mm')}`}</small>
+                </div>
+                <p>{schedule.title}</p>
+              </div>
+            </div>
+          )
+        }
+      })
+    }
+  }
 
   return (
     <div style={{ background: '#bbc2d1', padding: '5em 0' }}>
@@ -107,40 +220,26 @@ const Booking = () => {
         </div>
         <div className="right-box">
           <div className="tab-header">
-            <div className="tab-title tab-active">
+            <div
+              className={`tab-title ${activeTab === 0 ? 'tab-active' : ''}`}
+              onClick={() => onChangeTab(0)}
+            >
               <span>THIS WEEK</span>
             </div>
-            <div className="tab-title">
+            <div
+              className={`tab-title ${activeTab === 1 ? 'tab-active' : ''}`}
+              onClick={() => onChangeTab(1)}
+            >
               <span>NEXT WEEK</span>
             </div>
-            <div className="tab-title">
+            <div
+              className={`tab-title ${activeTab === 2 ? 'tab-active' : ''}`}
+              onClick={() => onChangeTab(2)}
+            >
               <span>WHOLE MONTH</span>
             </div>
           </div>
-          <div className="tab-body">
-            <small className="date-title">Today (Mon, 28 Sep)</small>
-            <div className="schedule-detail">
-              <div className="time">
-                <div className="dot" style={{ background: DOT_COLOR[0] }}></div>
-                <small>13:00 - 14:00</small>
-              </div>
-              <p>Lunch with petr</p>
-            </div>
-            <div className="schedule-detail">
-              <div className="time">
-                <div className="dot" style={{ background: DOT_COLOR[1] }}></div>
-                <small>13:00 - 14:00</small>
-              </div>
-              <p>Lunch with petr</p>
-            </div>
-            <div className="schedule-detail">
-              <div className="time">
-                <div className="dot" style={{ background: DOT_COLOR[2] }}></div>
-                <small>13:00 - 14:00</small>
-              </div>
-              <p>Lunch with petr</p>
-            </div>
-          </div>
+          <div className="tab-body">{renderSchedule()}</div>
         </div>
       </div>
     </div>
