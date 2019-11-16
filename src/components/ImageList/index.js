@@ -24,7 +24,7 @@ const ImageList = () => {
       })
   }
   console.log(imgList)
-  if (isLoading) return <div>Loading</div>
+  if (isLoading) return <div>Loading...</div>
   return (
     <div className="container">
       <div className="img-list">

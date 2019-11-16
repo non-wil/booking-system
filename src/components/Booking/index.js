@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import queryString from 'query-string'
 import { BOOKINGS } from './bookingData'
 import './style.scss'
 
@@ -41,6 +42,10 @@ const Booking = () => {
     const overlapSchedules = getOverlapSchedule(roomId, startTime, endTime)
     return overlapSchedules.length > 0 ? false : true
   }
+  console.log(
+    'checkAvailability',
+    checkAvailability('A101', '2019-10-06 14:00:00', '2019-10-06 15:00:00')
+  )
 
   const getBookingsForWeek = (roomId, weekNo) => {
     const startDate = moment()
@@ -54,41 +59,50 @@ const Booking = () => {
     const bookingForWeek = getOverlapSchedule(roomId, startDate, endDate)
     return bookingForWeek
   }
-
-  console.log(
-    'checkAvailability',
-    checkAvailability('A101', '2019-10-06 14:00:00', '2019-10-06 15:00:00')
-  )
-
   const weeknumber = moment('2019-09-28 00:00:00').isoWeek()
   console.log('getBookingsForWeek', getBookingsForWeek('A101', weeknumber))
 
+  const getBookingsForADay = (roomId, date) => {
+    const _startTime = moment(date).format('YYYY-MM-DD 00:00:00')
+    const _endTime = moment(date).format('YYYY-MM-DD 23:59:59')
+
+    const overlapSchedules = getOverlapSchedule(roomId, _startTime, _endTime)
+    const sortedSchedule = overlapSchedules.sort((a, b) => {
+      return moment(a.startTime) - moment(b.startTime)
+    })
+    return sortedSchedule
+  }
+
+  const query = queryString.parse(window.location.search)
+  const roomId = query.roomId
+  const todayDate = moment('2019-09-28 00:00:00')
+  const todaySchedules = getBookingsForADay(roomId, todayDate)
+
   return (
-    <div style={{ background: '#bbc2d1' }}>
+    <div style={{ background: '#bbc2d1', padding: '5em 0' }}>
       <div className="container">
         <div className="left-box">
           <div className="room-no-box">
-            <span>A101</span>
+            <span>{roomId}</span>
           </div>
           <div className="date-box">
             <small>Upcoming</small>
             <h1>
-              <span>Monday</span> <br /> 28 Sep
+              <span>{todayDate.format('dddd')}</span> <br />
+              {todayDate.format('DD MMM')}
             </h1>
           </div>
           <div className="today-schedule">
-            <div className="schedule-item">
-              <small>13.00 - 14.00</small>
-              <p>Lunch with petr</p>
-            </div>
-            <div className="schedule-item">
-              <small>13.00 - 14.00</small>
-              <p>Lunch with petr</p>
-            </div>
-            <div className="schedule-item">
-              <small>13.00 - 14.00</small>
-              <p>Lunch with petr</p>
-            </div>
+            {todaySchedules.map((scheduleItem, index) => {
+              return (
+                <div key={index} className="schedule-item">
+                  <small>{`${moment(scheduleItem.startTime).format(
+                    'HH:mm'
+                  )} - ${moment(scheduleItem.endTime).format('HH:mm')}`}</small>
+                  <p>{scheduleItem.title}</p>
+                </div>
+              )
+            })}
           </div>
         </div>
         <div className="right-box">
@@ -100,7 +114,7 @@ const Booking = () => {
               <span>NEXT WEEK</span>
             </div>
             <div className="tab-title">
-              <span>WHOLE WEEK</span>
+              <span>WHOLE MONTH</span>
             </div>
           </div>
           <div className="tab-body">
