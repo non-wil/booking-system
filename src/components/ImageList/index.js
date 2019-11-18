@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import MyGithub from 'components/MyGithub'
 import './style.scss'
 
 const ImageList = () => {
@@ -37,6 +38,10 @@ const ImageList = () => {
           )
         })}
       </div>
+      <MyGithub
+        title="Github: ImageList"
+        url="https://github.com/non-wil/booking-system/blob/master/src/components/ImageList/index.js"
+      />
     </div>
   )
 }

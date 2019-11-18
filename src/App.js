@@ -25,6 +25,9 @@ function App() {
           <Route path="/bookings/today">
             <Booking />
           </Route>
+          <Route path="/">
+            <ImageList />
+          </Route>
         </Switch>
       </Router>
     </div>

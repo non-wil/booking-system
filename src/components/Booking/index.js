@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import queryString from 'query-string'
+import MyGithub from 'components/MyGithub'
 import {
   getBookingsForDay,
   getBookingsForWeek,
@@ -196,6 +197,10 @@ const Booking = () => {
         </div>
         {/* END: Right Box */}
       </div>
+      <MyGithub
+        title="Github: Booking"
+        url="https://github.com/non-wil/booking-system/blob/master/src/components/Booking/index.js"
+      />
     </div>
   )
 }
