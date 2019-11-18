@@ -100,7 +100,7 @@ const Booking = () => {
           currentDay = moment(schedule.startTime)
           return (
             <React.Fragment key={index}>
-              <div style={{ margin: '2.5em 0 1.5em 0' }}>
+              <div style={{ margin: '2.5em -4em 1.5em -4em' }}>
                 <small className="date-title">
                   {`${getTextTodayTomorrow(TODAY_DATE, currentDay)} ${moment(
                     schedule.startTime

@@ -9,8 +9,8 @@
     background: linear-gradient(
       to bottom,
       rgba(70, 82, 158, 1) 0%,
-      rgba(70, 82, 158, 1) 63%,
-      rgba(77, 90, 161, 1) 63%,
+      rgba(70, 82, 158, 1) 60%,
+      rgba(77, 90, 161, 1) 60%,
       rgba(77, 90, 161, 1) 100%
     );
     .room-no-box {
@@ -86,14 +86,13 @@
       }
     }
     .tab-body {
-      margin-bottom: 3em;
+      margin: 3em 4em;
       p {
         margin: 0;
       }
       .date-title {
         color: #787878;
         font-weight: bold;
-        // margin: 3em 4em;
         display: block;
         border: 1px solid #f1f1f1;
         background: #f7f7f7;
@@ -102,7 +101,7 @@
     }
   }
   .schedule-detail {
-    margin: 0 3em 20px 3em;
+    margin-bottom: 20px;
     font-weight: 500;
     .time {
       position: relative;
