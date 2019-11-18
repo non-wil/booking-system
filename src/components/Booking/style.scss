@@ -25,7 +25,6 @@
         color: #ffffff;
       }
     }
-
     .date-box {
       margin-top: 5em;
       margin-bottom: 3em;
@@ -62,8 +61,6 @@
       align-items: flex-end;
       padding: 0 3em;
       background: #efeeec;
-      // box-shadow: inset 0 4px 2px -2px gray;
-      // box-shadow: inset 0 -1px 9px 0px grey;
       box-shadow: inset 0 -9px 9px -8px rgba(0, 0, 0, 0.2);
       .tab-title {
         padding: 15px;
@@ -101,8 +98,6 @@
       }
     }
   }
-
-  
   .schedule-detail {
     margin-bottom: 25px;
     font-weight: 500;
