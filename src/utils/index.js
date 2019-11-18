@@ -95,7 +95,7 @@ export const getBookingsForMonth = (roomId, date) => {
     .format('YYYY-MM-DD 00:00:00')
   const _endTime = moment(date)
     .set('date', days)
-    .format('YYYY-MM-DD 00:00:00')
+    .format('YYYY-MM-DD 23:59:59')
 
   const overlapSchedules = getOverlapSchedule(roomId, _startTime, _endTime)
   const sortedSchedule = overlapSchedules.sort((a, b) => {
