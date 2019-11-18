@@ -7,18 +7,41 @@ import {
   getBookingsForMonth,
   getTextTodayTomorrow
 } from 'utils'
+import ScheduleItem from './scheduleItem'
 import './style.scss'
 
+//------------------------------------------------
+// BEGIN: Constant variable
+//------------------------------------------------
 const DOT_COLOR = ['#3DC7D2', '#23CF5F', 'F3814A']
+const TABS = [
+  {
+    title: 'THIS WEEK',
+    value: 0
+  },
+  {
+    title: 'NEXT WEEK',
+    value: 1
+  },
+  {
+    title: 'WHOLE MONTH',
+    value: 2
+  }
+]
+
+// NOTE: Set today to be 28 Sep 2019 for the sake of the booking data
+const TODAY_DATE = moment('2019-09-28 00:00:00')
+const WEEK_NUMBER = moment('2019-09-28 00:00:00').isoWeek()
+//------------------------------------------------
+// END: Constant variable
+//------------------------------------------------
 
 const Booking = () => {
   const query = queryString.parse(window.location.search)
   const roomId = query.roomId
-  const todayDate = moment('2019-09-28 00:00:00')
-  const weekNumber = moment('2019-09-28 00:00:00').isoWeek()
   const todaySchedules = getBookingsForDay(
     roomId,
-    todayDate.format('YYYY-MM-DD hh:mm:ss')
+    TODAY_DATE.format('YYYY-MM-DD hh:mm:ss')
   )
 
   const [activeTab, setActivetab] = useState(0)
@@ -30,7 +53,7 @@ const Booking = () => {
     switch (tabIndex) {
       case 1: {
         // NOTE: NEXT WEEK
-        const schedules = getBookingsForWeek(roomId, weekNumber + 1)
+        const schedules = getBookingsForWeek(roomId, WEEK_NUMBER + 1)
         setSchedules(schedules)
         break
       }
@@ -38,14 +61,14 @@ const Booking = () => {
         // NOTE: WHOLE MONTH
         const schedules = getBookingsForMonth(
           roomId,
-          todayDate.format('YYYY-MM-DD hh:mm:ss')
+          TODAY_DATE.format('YYYY-MM-DD hh:mm:ss')
         )
         setSchedules(schedules)
         break
       }
       case 0: // NOTE: THIS WEEK
       default: {
-        const schedules = getBookingsForWeek(roomId, weekNumber)
+        const schedules = getBookingsForWeek(roomId, WEEK_NUMBER)
         setSchedules(schedules)
         break
       }
@@ -58,40 +81,30 @@ const Booking = () => {
       return schedules.map((schedule, index) => {
         if (moment(schedule.startTime).isSame(currentDay, 'day')) {
           return (
-            <div key={index} className="schedule-detail">
-              <div className="time">
-                <div
-                  className="dot"
-                  style={{ background: DOT_COLOR[index % 3] }}
-                ></div>
-                <small>{`${moment(schedule.startTime).format(
-                  'HH:mm'
-                )} - ${moment(schedule.endTime).format('HH:mm')}`}</small>
-              </div>
-              <p>{schedule.title}</p>
-            </div>
+            <ScheduleItem
+              key={index}
+              dotColor={DOT_COLOR[index % 3]}
+              startTime={moment(schedule.startTime).format('HH:mm')}
+              endTime={moment(schedule.endTime).format('HH:mm')}
+              title={schedule.title}
+            />
           )
         } else {
           currentDay = moment(schedule.startTime)
           return (
             <div key={index}>
               <small className="date-title">
-                {`${getTextTodayTomorrow(todayDate, currentDay)} ${moment(
+                {`${getTextTodayTomorrow(TODAY_DATE, currentDay)} ${moment(
                   schedule.startTime
                 ).format('ddd, DD MMM')}`}
               </small>
-              <div className="schedule-detail">
-                <div className="time">
-                  <div
-                    className="dot"
-                    style={{ background: DOT_COLOR[index % 3] }}
-                  ></div>
-                  <small>{`${moment(schedule.startTime).format(
-                    'HH:mm'
-                  )} - ${moment(schedule.endTime).format('HH:mm')}`}</small>
-                </div>
-                <p>{schedule.title}</p>
-              </div>
+              <ScheduleItem
+                key={index}
+                dotColor={DOT_COLOR[index % 3]}
+                startTime={moment(schedule.startTime).format('HH:mm')}
+                endTime={moment(schedule.endTime).format('HH:mm')}
+                title={schedule.title}
+              />
             </div>
           )
         }
@@ -102,6 +115,7 @@ const Booking = () => {
   return (
     <div style={{ background: '#bbc2d1', padding: '5em 0' }}>
       <div className="container">
+        {/* BEGIN: Left box */}
         <div className="left-box">
           <div className="room-no-box">
             <span>{roomId}</span>
@@ -109,46 +123,44 @@ const Booking = () => {
           <div className="date-box">
             <small>Upcoming</small>
             <h1>
-              <span>{todayDate.format('dddd')}</span> <br />
-              {todayDate.format('DD MMM')}
+              <span>{TODAY_DATE.format('dddd')}</span> <br />
+              {TODAY_DATE.format('DD MMM')}
             </h1>
           </div>
           <div className="today-schedule">
             {todaySchedules.map((scheduleItem, index) => {
               return (
-                <div key={index} className="schedule-item">
-                  <small>{`${moment(scheduleItem.startTime).format(
-                    'HH:mm'
-                  )} - ${moment(scheduleItem.endTime).format('HH:mm')}`}</small>
-                  <p>{scheduleItem.title}</p>
-                </div>
+                <ScheduleItem
+                  key={index}
+                  startTime={moment(scheduleItem.startTime).format('HH:mm')}
+                  endTime={moment(scheduleItem.endTime).format('HH:mm')}
+                  title={scheduleItem.title}
+                />
               )
             })}
           </div>
         </div>
+        {/* END: Left Box */}
+
+        {/* BEGIN: Right Box */}
         <div className="right-box">
           <div className="tab-header">
-            <div
-              className={`tab-title ${activeTab === 0 ? 'tab-active' : ''}`}
-              onClick={() => onChangeTab(0)}
-            >
-              <span>THIS WEEK</span>
-            </div>
-            <div
-              className={`tab-title ${activeTab === 1 ? 'tab-active' : ''}`}
-              onClick={() => onChangeTab(1)}
-            >
-              <span>NEXT WEEK</span>
-            </div>
-            <div
-              className={`tab-title ${activeTab === 2 ? 'tab-active' : ''}`}
-              onClick={() => onChangeTab(2)}
-            >
-              <span>WHOLE MONTH</span>
-            </div>
+            {TABS.map(tab => {
+              return (
+                <div
+                  className={`tab-title ${
+                    activeTab === tab.value ? 'tab-active' : ''
+                  }`}
+                  onClick={() => onChangeTab(tab.value)}
+                >
+                  <span>{tab.title}</span>
+                </div>
+              )
+            })}
           </div>
           <div className="tab-body">{renderSchedule()}</div>
         </div>
+        {/* END: Right Box */}
       </div>
     </div>
   )

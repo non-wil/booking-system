@@ -8,8 +8,8 @@
     background: linear-gradient(
       to bottom,
       rgba(70, 82, 158, 1) 0%,
-      rgba(70, 82, 158, 1) 61%,
-      rgba(77, 90, 161, 1) 61%,
+      rgba(70, 82, 158, 1) 63%,
+      rgba(77, 90, 161, 1) 63%,
       rgba(77, 90, 161, 1) 100%
     );
   }
@@ -98,24 +98,24 @@
       margin-bottom: 3em;
       display: block;
     }
-    .schedule-detail {
-      margin-bottom: 25px;
-      font-weight: 500;
-      .time {
-        position: relative;
-        .dot {
-          position: absolute;
-          left: -25px;
-          top: 10px;
-          height: 5px;
-          width: 5px;
-          background: red;
-          border-radius: 50%;
-        }
-        small {
-          color: #afafaf;
-          font-size: 10px;
-        }
+  }
+  .schedule-detail {
+    margin-bottom: 25px;
+    font-weight: 500;
+    .time {
+      position: relative;
+      .dot {
+        position: absolute;
+        left: -25px;
+        top: 10px;
+        height: 5px;
+        width: 5px;
+        background: red;
+        border-radius: 50%;
+      }
+      small {
+        color: #afafaf;
+        font-size: 10px;
       }
     }
   }
