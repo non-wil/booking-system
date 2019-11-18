@@ -4,6 +4,12 @@
   overflow: hidden;
   .img-list {
     margin: 0 -15%;
+    @media (min-width: 992px) and (max-width: 1200px) {
+      margin: 0 -20%;
+    }
+    @media (min-width: 576px) and (max-width: 991px) {
+      margin: 0 -25%;
+    }
     .img-item {
       display: inline-block;
       margin: 2px;
