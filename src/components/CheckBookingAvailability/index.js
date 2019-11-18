@@ -60,7 +60,10 @@ const CheckBookingAvailability = () => {
           Booking schedule (for reference)
         </a>
       </div>
-      <MyGithub title="Github: CheckBookingAvailability" url="" />
+      <MyGithub
+        title="Github: CheckBookingAvailability"
+        url="https://github.com/non-wil/booking-system/blob/master/src/components/CheckBookingAvailability/index.js"
+      />
     </div>
   )
 }
