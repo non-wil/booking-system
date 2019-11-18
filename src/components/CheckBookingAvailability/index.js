@@ -1,14 +1,12 @@
 import React, { useState } from 'react'
-import Datetime from 'react-datetime'
-import moment from 'moment'
 import MyGithub from 'components/MyGithub'
 import { checkAvailability } from 'utils'
 import './style.scss'
 
 const CheckBookingAvailability = () => {
   const [roomId, setRoomId] = useState('A101')
-  const [startTime, setStartTime] = useState(moment.utc('2019-09-28 10:00:00'))
-  const [endTime, setEndTime] = useState(moment('2019-09-28 16:00:00'))
+  const [startTime, setStartTime] = useState('2019-09-28 10:00:00')
+  const [endTime, setEndTime] = useState('2019-09-28 16:00:00')
   const [isRoomAvailable, setIsRoomAvailable] = useState(null)
 
   return (
@@ -28,10 +26,22 @@ const CheckBookingAvailability = () => {
         </select>
         <div>
           <br />
-          <span> Start Time: </span>
-          <Datetime value={startTime} onChange={date => setStartTime(date)} />
+          <span> Start Time:</span>
+          <input
+            placeholder="2019-09-28 10:00:00"
+            value={startTime}
+            onChange={event => {
+              setStartTime(event.target.value)
+            }}
+          />
           <span> End Time: </span>
-          <Datetime value={endTime} onChange={date => setEndTime(date)} />
+          <input
+            placeholder="2019-09-28 16:00:00"
+            value={endTime}
+            onChange={event => {
+              setEndTime(event.target.value)
+            }}
+          />
         </div>
       </div>
       <br />
@@ -45,8 +55,7 @@ const CheckBookingAvailability = () => {
       {isRoomAvailable !== null && (
         <div>
           Room {roomId} is {isRoomAvailable ? 'AVAILABLE' : 'NOT AVAILABLE'} on{' '}
-          {startTime.format('YYYY-MM-DD hh:mm:ss')} to{' '}
-          {endTime.format('YYYY-MM-DD hh:mm:ss')}
+          {startTime} to {endTime}
         </div>
       )}
 
