@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import queryString from 'query-string'
 import {
@@ -39,13 +39,20 @@ const WEEK_NUMBER = moment('2019-09-28 00:00:00').isoWeek()
 const Booking = () => {
   const query = queryString.parse(window.location.search)
   const roomId = query.roomId
-  const todaySchedules = getBookingsForDay(
-    roomId,
-    TODAY_DATE.format('YYYY-MM-DD hh:mm:ss')
-  )
 
   const [activeTab, setActivetab] = useState(0)
+  const [todaySchedules, setTodaySchedules] = useState([])
   const [schedules, setSchedules] = useState([])
+
+  useEffect(() => {
+    const _todaySchedules = getBookingsForDay(
+      roomId,
+      TODAY_DATE.format('YYYY-MM-DD hh:mm:ss')
+    )
+    setTodaySchedules(_todaySchedules)
+    const thisWeekSchedule = getBookingsForWeek(roomId, WEEK_NUMBER)
+    setSchedules(thisWeekSchedule)
+  }, [roomId])
 
   const onChangeTab = tabIndex => {
     setActivetab(tabIndex)

@@ -1,7 +1,7 @@
 import React from 'react'
 
 const ScheduleItem = props => {
-  const { dotColor, startTime, endTime, title, theme } = props
+  const { dotColor, startTime, endTime, title } = props
   return (
     <div className="schedule-detail">
       <div className="time">
