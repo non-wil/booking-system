@@ -11,9 +11,6 @@ function App() {
         <nav className="nav">
           <ul>
             <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
               <Link to="/img-list">Image List</Link>
             </li>
             <li>

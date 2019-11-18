@@ -99,12 +99,14 @@ const Booking = () => {
         } else {
           currentDay = moment(schedule.startTime)
           return (
-            <div key={index}>
-              <small className="date-title">
-                {`${getTextTodayTomorrow(TODAY_DATE, currentDay)} ${moment(
-                  schedule.startTime
-                ).format('ddd, DD MMM')}`}
-              </small>
+            <React.Fragment key={index}>
+              <div style={{ margin: '2.5em 0 1.5em 0' }}>
+                <small className="date-title">
+                  {`${getTextTodayTomorrow(TODAY_DATE, currentDay)} ${moment(
+                    schedule.startTime
+                  ).format('ddd, DD MMM')}`}
+                </small>
+              </div>
               <ScheduleItem
                 key={index}
                 dotColor={DOT_COLOR[index % 3]}
@@ -112,7 +114,7 @@ const Booking = () => {
                 endTime={moment(schedule.endTime).format('HH:mm')}
                 title={schedule.title}
               />
-            </div>
+            </React.Fragment>
           )
         }
       })
