@@ -13,7 +13,7 @@ import './style.scss'
 //------------------------------------------------
 // BEGIN: Constant variable
 //------------------------------------------------
-const DOT_COLOR = ['#3DC7D2', '#23CF5F', 'F3814A']
+const DOT_COLOR = ['#3DC7D2', '#23CF5F', '#F3814A']
 const TABS = [
   {
     title: 'THIS WEEK',
@@ -29,7 +29,7 @@ const TABS = [
   }
 ]
 
-// NOTE: Set today to be 28 Sep 2019 for the sake of the booking data
+// NOTE: Set today to be 28 Sep 2019 for the sake of the booking data.
 const TODAY_DATE = moment('2019-09-28 00:00:00')
 const WEEK_NUMBER = moment('2019-09-28 00:00:00').isoWeek()
 //------------------------------------------------
@@ -45,6 +45,7 @@ const Booking = () => {
   const [schedules, setSchedules] = useState([])
 
   useEffect(() => {
+    // NOTE: Get default schedules
     const _todaySchedules = getBookingsForDay(
       roomId,
       TODAY_DATE.format('YYYY-MM-DD hh:mm:ss')
@@ -56,7 +57,6 @@ const Booking = () => {
 
   const onChangeTab = tabIndex => {
     setActivetab(tabIndex)
-
     switch (tabIndex) {
       case 1: {
         // NOTE: NEXT WEEK
@@ -73,7 +73,7 @@ const Booking = () => {
         setSchedules(schedules)
         break
       }
-      case 0: // NOTE: THIS WEEK
+      case 0: // NOTE: THIS WEEK (Default)
       default: {
         const schedules = getBookingsForWeek(roomId, WEEK_NUMBER)
         setSchedules(schedules)
@@ -86,17 +86,41 @@ const Booking = () => {
     if (schedules[0]) {
       let currentDay
       return schedules.map((schedule, index) => {
+        let diffTimeSpacing = 0
+        // NOTE: Check for shcedule in the 'SAME' day
         if (moment(schedule.startTime).isSame(currentDay, 'day')) {
+          // NOTE: Check if we need to compare this schedule and next schedule
+          if (
+            index + 1 < schedules.length &&
+            moment(schedules[index + 1].startTime).isSame(currentDay, 'day')
+          ) {
+            // NOTE: Find diff time between this schedule and next schedule
+            // to determine the spacing between schedule.
+            const timeDiffHour = moment
+              .duration(
+                moment(schedule.endTime).diff(
+                  moment(schedules[index + 1].startTime)
+                )
+              )
+              .hours()
+            diffTimeSpacing = timeDiffHour * -50
+          }
+
           return (
-            <ScheduleItem
+            <div
+              style={diffTimeSpacing ? { marginBottom: diffTimeSpacing } : {}}
               key={index}
-              dotColor={DOT_COLOR[index % 3]}
-              startTime={moment(schedule.startTime).format('HH:mm')}
-              endTime={moment(schedule.endTime).format('HH:mm')}
-              title={schedule.title}
-            />
+            >
+              <ScheduleItem
+                dotColor={DOT_COLOR[index % 3]}
+                startTime={moment(schedule.startTime).format('HH:mm')}
+                endTime={moment(schedule.endTime).format('HH:mm')}
+                title={schedule.title}
+              />
+            </div>
           )
         } else {
+          // NOTE: Check for shcedule in the 'NEXT' day
           currentDay = moment(schedule.startTime)
           return (
             <React.Fragment key={index}>
@@ -157,6 +181,7 @@ const Booking = () => {
             {TABS.map(tab => {
               return (
                 <div
+                  key={tab.value}
                   className={`tab-title ${
                     activeTab === tab.value ? 'tab-active' : ''
                   }`}
