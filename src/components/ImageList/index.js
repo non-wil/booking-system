@@ -17,14 +17,15 @@ const ImageList = () => {
       .get('https://picsum.photos/v2/list')
       .then(response => {
         setIsLoading(false)
-        setImgList(response.data)
+        const filterImgList = response.data.filter(img => img.id !== '1')
+        setImgList(filterImgList)
       })
       .catch(error => {
         console.log('Cannot fetch image list: ', error)
       })
   }
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <div className="loading">Loading...</div>
   return (
     <div className="container">
       <div className="img-list">
