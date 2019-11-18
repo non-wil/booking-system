@@ -23,4 +23,20 @@
 
 .nav ul {
   list-style-type: none;
+  display: flex;
+  justify-content: space-around;
+}
+
+.nav ul li a {
+  text-decoration: none;
+  color: #282c34;
+  font-weight: bold;
+  background: #dddddd;
+  padding: 10px;
+  border-radius: 3px;
+}
+
+.nav ul li a:hover {
+  color: #ffffff;
+  background: #282c34;
 }
