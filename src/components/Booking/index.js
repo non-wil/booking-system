@@ -29,6 +29,7 @@ const TABS = [
     value: 2
   }
 ]
+const ROOMS = ['A101', 'A102', 'Auditorium']
 
 // NOTE: Set today to be 28 Sep 2019 for the sake of the booking data.
 const TODAY_DATE = moment('2019-09-28 00:00:00')
@@ -196,6 +197,11 @@ const Booking = () => {
           <div className="tab-body">{renderSchedule()}</div>
         </div>
         {/* END: Right Box */}
+      </div>
+      <div className="other-room">
+        {ROOMS.filter(room => room !== roomId).map(room => {
+          return (<a href={`/bookings/today?roomId=${room}`}>{room}</a>)
+        })}
       </div>
       <MyGithub
         title="Github: Booking"
