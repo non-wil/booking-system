@@ -34,6 +34,7 @@ const CheckBookingAvailability = () => {
               setStartTime(event.target.value)
             }}
           />
+          <br />
           <span> End Time: </span>
           <input
             placeholder="2019-09-28 16:00:00"

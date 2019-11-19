@@ -1,6 +1,10 @@
 .container {
   display: flex;
 
+  @media (max-width: 576px) {
+    flex-wrap: wrap;
+  }
+
   .left-box {
     width: 40%;
     padding-left: 3.5em;
@@ -13,6 +17,10 @@
       rgba(77, 90, 161, 1) 405px,
       rgba(77, 90, 161, 1) 100%
     );
+
+    @media (max-width: 576px) {
+      width: 100%;
+    }
     .room-no-box {
       display: flex;
       background-color: #2ebaee;
@@ -55,6 +63,10 @@
   .right-box {
     width: 60%;
     background: #ffffff;
+
+    @media (max-width: 576px) {
+      width: 100%;
+    }
     .tab-header {
       height: 80px;
       display: flex;
